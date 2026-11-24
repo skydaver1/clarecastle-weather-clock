@@ -18,7 +18,7 @@ body{padding:8px}
 .panel,.day{background:#071b30;border:2px solid #3679a6;border-radius:18px}
 .clock-panel{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:12px;min-width:0}
 .clock{font-size:26vw;font-weight:650;line-height:1;letter-spacing:-5px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.date{font-size:2.8vw;color:#c6def2;margin-top:2vh;text-align:center}
+.date{font-size:2.8vw;color:#c6def2;margin-top:2vh;text-align:center}\n.sun-times{display:flex;justify-content:center;gap:30px;margin-top:2.2vh;color:#c6def2;font-size:2.1vh;font-weight:600}\n.sun-times span{color:#f7fbff}\n.weather-details{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:12px;color:#c6def2;font-size:1.9vh;text-align:center}\n.weather-details strong{color:#f7fbff;font-weight:650}
 .weather-panel{padding:12px;display:flex;flex-direction:column;justify-content:space-evenly;min-width:0}
 .current{display:flex;align-items:center;justify-content:center;gap:12px}
 .current-icon{font-size:7vh}
@@ -41,7 +41,7 @@ body{padding:8px}
 .status{position:absolute;left:-9999px}
 @media (orientation:landscape) and (min-width:700px) and (max-width:1100px){
  .clock{font-size:20vw;letter-spacing:-3px}
- .date{font-size:2.5vw}
+ .date{font-size:2.5vw}\n .sun-times{font-size:2vh;margin-top:1.5vh}\n .weather-details{font-size:1.8vh;gap:12px;margin-top:8px}
  .current-icon{font-size:7.5vh}
  .current-temp{font-size:7.5vh}
  .current-desc{font-size:2.5vh}
@@ -72,7 +72,7 @@ body{padding:8px}
   <section class="top">
     <div class="panel clock-panel">
       <div class="clock" id="clock">--:--</div>
-      <div class="date" id="date">Loading date…</div>
+      <div class="date" id="date">Loading date…</div>\n      <div class="sun-times"><div>☀ Sunrise <span id="sunrise">--:--</span></div><div>🌇 Sunset <span id="sunset">--:--</span></div></div>
     </div>
     <div class="panel weather-panel">
       <div class="current">
@@ -120,13 +120,18 @@ body{padding:8px}
   function deg(v){return Math.round(v)+"°";}
   function failed(){ $("currentDesc").textContent="Weather temporarily unavailable";$("status").textContent="Could not update weather. Check internet connection."; }
   function load(){
-    var url="https://api.open-meteo.com/v1/forecast?latitude=52.814&longitude=-8.982&current=temperature_2m,weather_code&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=6&timezone=Europe%2FDublin";
+    var url="https://api.open-meteo.com/v1/forecast?latitude=52.814&longitude=-8.982&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&forecast_days=6&timezone=Europe%2FDublin";
     var x=new XMLHttpRequest();x.open("GET",url,true);x.timeout=15000;
     x.onreadystatechange=function(){if(x.readyState!==4)return;if(x.status>=200&&x.status<300){try{draw(JSON.parse(x.responseText));}catch(e){failed();}}else failed();};
     x.onerror=failed;x.ontimeout=failed;x.send();
   }
   function draw(d){
     var c=wx(d.current.weather_code);$("currentIcon").textContent=c[0];$("currentTemp").textContent=deg(d.current.temperature_2m)+"C";$("currentDesc").textContent=c[1];
+    $("feelsLike").textContent=deg(d.current.apparent_temperature)+"C";
+    var dirs=["N","NE","E","SE","S","SW","W","NW"],di=Math.round(d.current.wind_direction_10m/45)%8;
+    $("wind").textContent=dirs[di]+" "+Math.round(d.current.wind_speed_10m)+" km/h";
+    function shortTime(v){return v?v.substring(11,16):"--:--";}
+    $("sunrise").textContent=shortTime(d.daily.sunrise[0]);$("sunset").textContent=shortTime(d.daily.sunset[0]);
     var now=new Date(),ids=[];
     for(var i=0;i<d.hourly.time.length;i++){var t=new Date(d.hourly.time[i]);if(t.getTime()>now.getTime()-30*60000){ids.push(i);if(ids.length===4)break;}}
     var h="";
