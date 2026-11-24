@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#06182b">
+<title>Clarecastle Weather Clock</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#06182b;color:#f7fbff;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+body{padding:1.25vh 1.3vw}
+.dashboard{height:97.5vh;width:100%;max-width:1400px;margin:auto;display:grid;grid-template-rows:6vh minmax(0,1fr) 25vh;gap:1.4vh}
+.brand{display:flex;align-items:center;justify-content:center;gap:2vw;color:#d9eaff;font-weight:700;letter-spacing:.22em;font-size:clamp(15px,2.3vh,25px)}
+.brand:before,.brand:after{content:"";height:2px;width:15%;background:linear-gradient(90deg,transparent,#4ea9df)}
+.brand:after{transform:scaleX(-1)}
+.top{min-height:0;display:grid;grid-template-columns:1.55fr 1fr;gap:1.2vw}
+.panel,.day{background:linear-gradient(145deg,#071d33,#06172a);border:1.5px solid #3679a6;border-radius:20px;box-shadow:inset 0 0 22px rgba(47,132,187,.08)}
+.clock-panel{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2vh 1.5vw;min-width:0}
+.clock{font-size:clamp(100px,25vw, min(35vh,30vw));font-size:clamp(100px, min(27vw,36vh), 340px);font-weight:650;line-height:.98;letter-spacing:-.055em;font-variant-numeric:tabular-nums;white-space:nowrap;text-shadow:0 0 24px rgba(160,210,255,.1)}
+.date{font-size:clamp(17px,3vh,30px);color:#c6def2;margin-top:2.2vh;text-align:center}
+.weather-panel{padding:2vh 1.2vw;display:flex;flex-direction:column;justify-content:space-evenly;min-width:0}
+.current{display:flex;align-items:center;justify-content:center;gap:1.3vw}
+.current-icon{font-size:clamp(40px,8vh,82px)}
+.current-temp{font-size:clamp(38px,8vh,82px);font-weight:650;line-height:1}
+.current-desc{color:#c6def2;font-size:clamp(13px,2.2vh,23px);margin-top:.5vh}
+.rule{height:1px;background:#4b7897;opacity:.85;margin:1vh 0}
+.section{font-size:clamp(12px,1.9vh,19px);font-weight:700;letter-spacing:.1em;text-align:center;color:#d9eaff;margin:.4vh 0 1vh}
+.hours{display:grid;grid-template-columns:repeat(4,1fr);gap:.3vw}
+.hour{text-align:center;min-width:0}
+.hour-time{font-size:clamp(11px,1.8vh,18px);color:#c6def2}
+.hour-icon{font-size:clamp(22px,4.4vh,43px);margin:.6vh 0}
+.hour-temp{font-size:clamp(17px,3vh,29px);font-weight:650}
+.rain{font-size:clamp(10px,1.6vh,16px);color:#83cafa;margin-top:.4vh}
+.days{display:grid;grid-template-columns:repeat(5,1fr);gap:.9vw;min-height:0}
+.day{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:1vh .4vw;min-width:0}
+.day-name{font-size:clamp(13px,2.2vh,22px);font-weight:700;color:#d9eaff}
+.day-icon{font-size:clamp(24px,5vh,48px);margin:.5vh 0}
+.day-temps{font-size:clamp(13px,2.3vh,23px);font-weight:650;white-space:nowrap}
+.day-temps span{color:#83cafa}
+.status{position:absolute;left:-9999px}
+@media (orientation:portrait){
+ html,body{overflow:auto;height:auto;min-height:100%;} .dashboard{height:auto;min-height:100vh;grid-template-rows:auto auto auto;padding:8px;gap:10px}
+ .top{grid-template-columns:1fr;grid-template-rows:auto auto}.clock-panel{min-height:36vh}.clock{font-size:clamp(100px,25vw,220px)}
+ .weather-panel{min-height:34vh}.days{min-height:18vh}
+}
+
+/* Larger supporting text for the 9.7-inch iPad Air in landscape */
+@media (orientation: landscape) and (min-width: 700px) and (max-width: 1100px) {
+  body { padding: 1vh 1vw; }
+  .dashboard { height: 98vh; grid-template-rows: 6vh minmax(0,1fr) 24vh; gap: 1.2vh; }
+  .top { grid-template-columns: 1.48fr 1fr; gap: 1vw; }
+  .clock { font-size: clamp(175px, 29vw, 285px); }
+  .date { font-size: clamp(22px, 3.2vh, 27px); }
+  .brand { font-size: clamp(17px, 2.5vh, 22px); }
+  .weather-panel { padding: 1.5vh 1.4vw; }
+  .current-icon { font-size: clamp(52px, 8vh, 68px); }
+  .current-temp { font-size: clamp(48px, 8vh, 66px); }
+  .current-desc { font-size: clamp(18px, 2.6vh, 22px); }
+  .section { font-size: clamp(16px, 2.35vh, 19px); margin: .5vh 0 1vh; }
+  .hour-time { font-size: clamp(15px, 2.1vh, 18px); }
+  .hour-icon { font-size: clamp(30px, 4.8vh, 40px); }
+  .hour-temp { font-size: clamp(22px, 3.3vh, 27px); }
+  .rain { font-size: clamp(13px, 1.9vh, 16px); }
+  .day-name { font-size: clamp(17px, 2.6vh, 21px); }
+  .day-icon { font-size: clamp(34px, 5.4vh, 44px); }
+  .day-temps { font-size: clamp(17px, 2.65vh, 22px); }
+}
+
+</style>
+</head>
+<body>
+<main class="dashboard">
+  <header class="brand">CLARECASTLE</header>
+  <section class="top">
+    <div class="panel clock-panel">
+      <div class="clock" id="clock">--:--</div>
+      <div class="date" id="date">Loading date…</div>
+    </div>
+    <div class="panel weather-panel">
+      <div class="current">
+        <div class="current-icon" id="currentIcon">☁️</div>
+        <div><div class="current-temp" id="currentTemp">--°C</div><div class="current-desc" id="currentDesc">Getting weather…</div></div>
+      </div>
+      <div class="rule"></div>
+      <div>
+        <div class="section">NEXT 4 HOURS</div>
+        <div class="hours" id="hourly"><div class="hour">Loading…</div></div>
+      </div>
+    </div>
+  </section>
+  <section class="days" id="daily">
+    <div class="day">Loading forecast…</div>
+  </section>
+  <div class="status" id="status" aria-live="polite"></div>
+</main>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  function pad(n){return n<10?"0"+n:""+n;}
+  function tick(){
+    var n=new Date();
+    $("clock").textContent=pad(n.getHours())+":"+pad(n.getMinutes());
+    var ds=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var ms=["January","February","March","April","May","June","July","August","September","October","November","December"];
+    $("date").textContent=ds[n.getDay()]+", "+n.getDate()+" "+ms[n.getMonth()];
+  }
+  tick();setInterval(tick,1000);
+  function wx(c){
+    if(c===0)return["☀️","Clear"];
+    if(c===1)return["🌤️","Mainly clear"];
+    if(c===2)return["⛅","Partly cloudy"];
+    if(c===3)return["☁️","Cloudy"];
+    if(c===45||c===48)return["🌫️","Fog"];
+    if(c>=51&&c<=57)return["🌦️","Drizzle"];
+    if(c>=61&&c<=67)return["🌧️","Rain"];
+    if(c>=71&&c<=77)return["🌨️","Snow"];
+    if(c>=80&&c<=82)return["🌦️","Showers"];
+    if(c===85||c===86)return["🌨️","Snow showers"];
+    if(c>=95)return["⛈️","Thunderstorm"];
+    return["☁️","Mixed conditions"];
+  }
+  function deg(v){return Math.round(v)+"°";}
+  function failed(){ $("currentDesc").textContent="Weather temporarily unavailable";$("status").textContent="Could not update weather. Check internet connection."; }
+  function load(){
+    var url="https://api.open-meteo.com/v1/forecast?latitude=52.814&longitude=-8.982&current=temperature_2m,weather_code&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=6&timezone=Europe%2FDublin";
+    var x=new XMLHttpRequest();x.open("GET",url,true);x.timeout=15000;
+    x.onreadystatechange=function(){if(x.readyState!==4)return;if(x.status>=200&&x.status<300){try{draw(JSON.parse(x.responseText));}catch(e){failed();}}else failed();};
+    x.onerror=failed;x.ontimeout=failed;x.send();
+  }
+  function draw(d){
+    var c=wx(d.current.weather_code);$("currentIcon").textContent=c[0];$("currentTemp").textContent=deg(d.current.temperature_2m)+"C";$("currentDesc").textContent=c[1];
+    var now=new Date(),ids=[];
+    for(var i=0;i<d.hourly.time.length;i++){var t=new Date(d.hourly.time[i]);if(t.getTime()>now.getTime()-30*60000){ids.push(i);if(ids.length===4)break;}}
+    var h="";
+    for(var j=0;j<ids.length;j++){var k=ids[j],dt=new Date(d.hourly.time[k]),w=wx(d.hourly.weather_code[k]);h+='<div class="hour"><div class="hour-time">'+pad(dt.getHours())+':00</div><div class="hour-icon">'+w[0]+'</div><div class="hour-temp">'+deg(d.hourly.temperature_2m[k])+'</div><div class="rain">'+d.hourly.precipitation_probability[k]+'% rain</div></div>';}
+    $("hourly").innerHTML=h||"Hourly forecast unavailable";
+    var names=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],out="";
+    for(var q=1;q<d.daily.time.length&&q<6;q++){var day=new Date(d.daily.time[q]+"T12:00:00"),z=wx(d.daily.weather_code[q]);out+='<div class="day"><div class="day-name">'+names[day.getDay()]+'</div><div class="day-icon">'+z[0]+'</div><div class="day-temps">'+deg(d.daily.temperature_2m_max[q])+' <span>/ '+deg(d.daily.temperature_2m_min[q])+'</span></div></div>';}
+    $("daily").innerHTML=out;$("status").textContent="Updated "+pad(now.getHours())+":"+pad(now.getMinutes());
+  }
+  load();setInterval(load,15*60*1000);
+}());
+</script>
+</body>
+</html>
