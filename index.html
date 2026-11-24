@@ -8,67 +8,61 @@
 <meta name="theme-color" content="#06182b">
 <title>Clarecastle Weather Clock</title>
 <style>
-:root{color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#06182b;color:#f7fbff;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
-body{padding:1.25vh 1.3vw}
-.dashboard{height:97.5vh;width:100%;max-width:1400px;margin:auto;display:grid;grid-template-rows:6vh minmax(0,1fr) 25vh;gap:1.4vh}
-.brand{display:flex;align-items:center;justify-content:center;gap:2vw;color:#d9eaff;font-weight:700;letter-spacing:.22em;font-size:clamp(15px,2.3vh,25px)}
-.brand:before,.brand:after{content:"";height:2px;width:15%;background:linear-gradient(90deg,transparent,#4ea9df)}
-.brand:after{transform:scaleX(-1)}
-.top{min-height:0;display:grid;grid-template-columns:1.55fr 1fr;gap:1.2vw}
-.panel,.day{background:linear-gradient(145deg,#071d33,#06172a);border:1.5px solid #3679a6;border-radius:20px;box-shadow:inset 0 0 22px rgba(47,132,187,.08)}
-.clock-panel{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2vh 1.5vw;min-width:0}
-.clock{font-size:clamp(100px,25vw, min(35vh,30vw));font-size:clamp(100px, min(27vw,36vh), 340px);font-weight:650;line-height:.98;letter-spacing:-.055em;font-variant-numeric:tabular-nums;white-space:nowrap;text-shadow:0 0 24px rgba(160,210,255,.1)}
-.date{font-size:clamp(17px,3vh,30px);color:#c6def2;margin-top:2.2vh;text-align:center}
-.weather-panel{padding:2vh 1.2vw;display:flex;flex-direction:column;justify-content:space-evenly;min-width:0}
-.current{display:flex;align-items:center;justify-content:center;gap:1.3vw}
-.current-icon{font-size:clamp(40px,8vh,82px)}
-.current-temp{font-size:clamp(38px,8vh,82px);font-weight:650;line-height:1}
-.current-desc{color:#c6def2;font-size:clamp(13px,2.2vh,23px);margin-top:.5vh}
-.rule{height:1px;background:#4b7897;opacity:.85;margin:1vh 0}
-.section{font-size:clamp(12px,1.9vh,19px);font-weight:700;letter-spacing:.1em;text-align:center;color:#d9eaff;margin:.4vh 0 1vh}
-.hours{display:grid;grid-template-columns:repeat(4,1fr);gap:.3vw}
+body{padding:8px}
+.dashboard{height:calc(100vh - 16px);width:100%;max-width:1400px;margin:auto;display:grid;grid-template-rows:6% minmax(0,1fr) 24%;gap:1.2%}
+.brand{display:flex;align-items:center;justify-content:center;gap:2%;color:#d9eaff;font-weight:700;letter-spacing:3px;font-size:20px}
+.brand:before,.brand:after{content:"";height:2px;width:15%;background:#4ea9df}
+.top{min-height:0;display:grid;grid-template-columns:1.48fr 1fr;gap:1%}
+.panel,.day{background:#071b30;border:2px solid #3679a6;border-radius:18px}
+.clock-panel{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:12px;min-width:0}
+.clock{font-size:26vw;font-weight:650;line-height:1;letter-spacing:-5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.date{font-size:2.8vw;color:#c6def2;margin-top:2vh;text-align:center}
+.weather-panel{padding:12px;display:flex;flex-direction:column;justify-content:space-evenly;min-width:0}
+.current{display:flex;align-items:center;justify-content:center;gap:12px}
+.current-icon{font-size:7vh}
+.current-temp{font-size:7vh;font-weight:650;line-height:1}
+.current-desc{color:#c6def2;font-size:2.1vh;margin-top:4px}
+.rule{height:1px;background:#4b7897;margin:8px 0}
+.section{font-size:2vh;font-weight:700;letter-spacing:1px;text-align:center;color:#d9eaff;margin:4px 0 8px}
+.hours{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
 .hour{text-align:center;min-width:0}
-.hour-time{font-size:clamp(11px,1.8vh,18px);color:#c6def2}
-.hour-icon{font-size:clamp(22px,4.4vh,43px);margin:.6vh 0}
-.hour-temp{font-size:clamp(17px,3vh,29px);font-weight:650}
-.rain{font-size:clamp(10px,1.6vh,16px);color:#83cafa;margin-top:.4vh}
-.days{display:grid;grid-template-columns:repeat(5,1fr);gap:.9vw;min-height:0}
-.day{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:1vh .4vw;min-width:0}
-.day-name{font-size:clamp(13px,2.2vh,22px);font-weight:700;color:#d9eaff}
-.day-icon{font-size:clamp(24px,5vh,48px);margin:.5vh 0}
-.day-temps{font-size:clamp(13px,2.3vh,23px);font-weight:650;white-space:nowrap}
+.hour-time{font-size:1.8vh;color:#c6def2}
+.hour-icon{font-size:4vh;margin:5px 0}
+.hour-temp{font-size:2.8vh;font-weight:650}
+.rain{font-size:1.55vh;color:#83cafa;margin-top:3px}
+.days{display:grid;grid-template-columns:repeat(5,1fr);gap:1%;min-height:0}
+.day{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:5px 2px;min-width:0}
+.day-name{font-size:2.2vh;font-weight:700;color:#d9eaff}
+.day-icon{font-size:4.5vh;margin:4px 0}
+.day-temps{font-size:2.1vh;font-weight:650;white-space:nowrap}
 .day-temps span{color:#83cafa}
 .status{position:absolute;left:-9999px}
+@media (orientation:landscape) and (min-width:700px) and (max-width:1100px){
+ .clock{font-size:27vw;letter-spacing:-4px}
+ .date{font-size:2.7vw}
+ .current-icon{font-size:7.5vh}
+ .current-temp{font-size:7.5vh}
+ .current-desc{font-size:2.5vh}
+ .section{font-size:2.2vh}
+ .hour-time{font-size:2vh}
+ .hour-icon{font-size:4.5vh}
+ .hour-temp{font-size:3vh}
+ .rain{font-size:1.8vh}
+ .day-name{font-size:2.5vh}
+ .day-icon{font-size:5vh}
+ .day-temps{font-size:2.4vh}
+}
 @media (orientation:portrait){
- html,body{overflow:auto;height:auto;min-height:100%;} .dashboard{height:auto;min-height:100vh;grid-template-rows:auto auto auto;padding:8px;gap:10px}
- .top{grid-template-columns:1fr;grid-template-rows:auto auto}.clock-panel{min-height:36vh}.clock{font-size:clamp(100px,25vw,220px)}
- .weather-panel{min-height:34vh}.days{min-height:18vh}
+ html,body{overflow:auto;height:auto;min-height:100%}
+ .dashboard{height:auto;min-height:100vh;grid-template-rows:auto auto auto;padding:8px;gap:10px}
+ .top{grid-template-columns:1fr;grid-template-rows:auto auto}
+ .clock-panel{min-height:36vh}
+ .clock{font-size:25vw}
+ .weather-panel{min-height:34vh}
+ .days{min-height:18vh}
 }
-
-/* Larger supporting text for the 9.7-inch iPad Air in landscape */
-@media (orientation: landscape) and (min-width: 700px) and (max-width: 1100px) {
-  body { padding: 1vh 1vw; }
-  .dashboard { height: 98vh; grid-template-rows: 6vh minmax(0,1fr) 24vh; gap: 1.2vh; }
-  .top { grid-template-columns: 1.48fr 1fr; gap: 1vw; }
-  .clock { font-size: clamp(175px, 29vw, 285px); }
-  .date { font-size: clamp(22px, 3.2vh, 27px); }
-  .brand { font-size: clamp(17px, 2.5vh, 22px); }
-  .weather-panel { padding: 1.5vh 1.4vw; }
-  .current-icon { font-size: clamp(52px, 8vh, 68px); }
-  .current-temp { font-size: clamp(48px, 8vh, 66px); }
-  .current-desc { font-size: clamp(18px, 2.6vh, 22px); }
-  .section { font-size: clamp(16px, 2.35vh, 19px); margin: .5vh 0 1vh; }
-  .hour-time { font-size: clamp(15px, 2.1vh, 18px); }
-  .hour-icon { font-size: clamp(30px, 4.8vh, 40px); }
-  .hour-temp { font-size: clamp(22px, 3.3vh, 27px); }
-  .rain { font-size: clamp(13px, 1.9vh, 16px); }
-  .day-name { font-size: clamp(17px, 2.6vh, 21px); }
-  .day-icon { font-size: clamp(34px, 5.4vh, 44px); }
-  .day-temps { font-size: clamp(17px, 2.65vh, 22px); }
-}
-
 </style>
 </head>
 <body>
